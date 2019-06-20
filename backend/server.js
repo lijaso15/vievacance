@@ -42,7 +42,7 @@ if (!isDev && cluster.isMaster) {
     app.use(session({
         secret: 'oursecret',
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
         cookie: {
             expires: 600000
             // httpOnly: true
