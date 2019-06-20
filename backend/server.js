@@ -44,9 +44,10 @@ if (!isDev && cluster.isMaster) {
         resave: false,
         saveUninitialized: false,
         cookie: {
-            expires: 600000,
-            httpOnly: true
-        }
+            expires: 600000
+            // httpOnly: true
+        },
+        proxy: true
     }))
 
 
