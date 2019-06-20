@@ -6,7 +6,9 @@ import * as Yup from "yup"
 import axios from "axios"
 import Input from './Input'
 import { connect } from 'react-redux'
+import equalTo from '../../utils/equalTo'
 
+Yup.addMethod(Yup.string, 'equalTo', equalTo);
 
 
 const SignupSchema = Yup.object().shape({
@@ -23,6 +25,9 @@ const SignupSchema = Yup.object().shape({
         .matches(/^(?=.*[a-z])/g, 'The password must contain at least 1 lowercase alphabetical character')
         .matches(/^(?=.*[A-Z])/g, 'The password must contain at least 1 uppercase alphabetical character')
         .matches(/^(?=.*[0-9])/g, 'The password must contain at least 1 numeric character')
+        .required('Required'),
+    'confirm password:': Yup.string()
+        .equalTo(Yup.ref('password'), 'Passwords must match')
         .required('Required')
 });
 
@@ -35,6 +40,7 @@ const Signup = ({ active }) => {
                 username: '',
                 email: '',
                 password: '',
+                'confirm password:': '',
                 success: ''
             }}
             validationSchema={SignupSchema}
@@ -57,9 +63,10 @@ const Signup = ({ active }) => {
             }
             render={({ values, isSubmitting }) => (
                 <Form>
-                    <Field name="username" component={Input} type="text" placeholder="e.g. jellydonuts" icons={{ left: 'user', right: 'check' }} />
-                    <Field name="email" component={Input} type="email" placeholder="e.g. jasonli@frontend.io" icons={{ left: 'envelope', right: 'check' }} />
+                    <Field name="username" component={Input} type="text" placeholder="e.g. singlelady" icons={{ left: 'user', right: 'check' }} />
+                    <Field name="email" component={Input} type="email" placeholder="e.g. be@yonce.io" icons={{ left: 'envelope', right: 'check' }} />
                     <Field name="password" component={Input} type="password" placeholder="•••••••" icons={{ left: 'key', right: 'check' }} />
+                    <Field name="confirm password:" component={Input} type="password" placeholder="•••••••" icons={{ left: 'key', right: 'check' }} />
                     <button className="button is-link" type="submit" disabled={isSubmitting}>Submit</button>
                     {values.success && <article className="message is-success is-small">
                         <div className="message-body">

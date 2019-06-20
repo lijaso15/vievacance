@@ -1,27 +1,35 @@
 
 // /src/actions/index
+// POSITION
+export const newSlide = () => {
+    return {
+        type: 'NEW_SLIDE'
+    }
+}
 
-export const nextSlide = (index) => {
+export const nextSlide = (id) => {
     return {
         type: 'NEXT_SLIDE',
-        index
+        id
     }
 }
 
-export const prevSlide = (index) => {
+export const prevSlide = (id) => {
     return {
         type: 'PREV_SLIDE',
-        index
+        id
     }
 }
 
-export const skipTo = (index) => {
+export const skipTo = (index, id) => {
     return {
         type: 'SKIP_TO',
-        index
+        index,
+        id
     }
 }
 
+// ERRORS
 export const authenticationError = () => {
     return {
         type: 'ERR_SIGNED_IN'
@@ -34,12 +42,15 @@ export const errorCleared = () => {
     }
 }
 
-export const userHasLoggedOut = () => {
+export const setError = (label, message = '') => {
     return {
-        type: 'USER_HAS_LOGGED_OUT'
+        type: label,
+        message
     }
 }
 
+
+//TOGGLES
 export const toggleSignInButton = () => {
     return {
         type: 'TOGGLE_SIGNIN_BUTTON'
@@ -52,7 +63,13 @@ export const toggleSignUpButton = () => {
     }
 }
 
-export const signedIn = (id) => {
+export const toggleBurger = () => {
+    return {
+        type: 'TOGGLE_BURGER'
+    }
+}
+
+export const setSignedIn = (id) => {
     if (id) {
         return {
             type: 'SIGNED_IN',
@@ -65,10 +82,56 @@ export const signedIn = (id) => {
     }
 }
 
+export const setFilter = value => {
+    return {
+        type: 'FILTER',
+        value
+    }
+}
+
+
+export const setEditing = () => {
+    return { type: 'EDITING' }
+}
+export const setDeleting = () => {
+    return { type: 'DELETING' }
+}
+
+
+//DATA
 export const loadData = (data, label) => {
-    console.log(data)
     return {
         type: label,
         data
+    }
+}
+
+export const updateData = (data, label) => {
+    return {
+        type: 'UPDATE_' + label,
+        data
+    }
+}
+
+
+// PERSPECTIVE 
+export const setOwner = (owner) => {
+    return {
+        type: 'OWNER',
+        owner
+    }
+}
+export const setViewer = (id) => {
+    return {
+        type: 'VIEWER',
+        id
+    }
+}
+
+//EMPTY
+export const setEmpty = (label, val) => {
+    return {
+        type: label,
+        val
     }
 }

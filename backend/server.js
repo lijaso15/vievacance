@@ -5,8 +5,11 @@ const numCPUs = require('os').cpus().length;
 const express = require('express')
 const bodyParser = require('body-parser')
 const fs = require('fs')
+const multer = require('multer')
 const { mongoose } = require('./db/mongoose');
 const { User } = require('./models/User')
+const { Photo } = require('./models/Photo')
+const { Memento } = require('./models/Memento')
 const Cookies = require('universal-cookie');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -30,22 +33,48 @@ if (!isDev && cluster.isMaster) {
     const app = express();
     const cookies = new Cookies();
     app.use(bodyParser.json())
-
+    const upload = multer()
 
     // Priority serve any static files.
     app.use(express.static(path.resolve(__dirname, '../client/build')));
+
 
 
     // Answer API requests.
     app.get('/users', (req, res) => {
         const id = cookies.get('user')
         if (id) {
-            res.send(id)
+            User.findById(id).then(user => {
+                if (!user) {
+                    res.status(400).send()
+                } else {
+                    res.status(200).send(user)
+                }
+            }).catch(err => res.status(500).send())
         } else {
-            res.send(false)
+            res.send({ _id: false })
         }
     })
 
+    app.get('/users/logout', (req, res) => {
+        cookies.remove('user')
+        res.status(200).send()
+    })
+
+    app.get('/users/:id', (req, res) => {
+        const id = req.params.id
+        if (id) {
+            User.findById(id).then(user => {
+                if (!user) {
+                    res.status(400).send()
+                } else {
+                    res.status(200).send(user)
+                }
+            }).catch(err => res.status(500).send())
+        } else {
+            res.send({ _id: false })
+        }
+    })
 
     app.post('/users', (req, res) => {
 
@@ -53,7 +82,7 @@ if (!isDev && cluster.isMaster) {
         const user = new User({
             username, email, password,
             isadmin: false,
-            profilePicture: '/assets/tmp.png'
+            profilePicture: ''
         })
 
         User.findByUsername(username).then((bad) => {
@@ -77,13 +106,20 @@ if (!isDev && cluster.isMaster) {
         })
     })
 
+    Date.prototype.addMinutes = function (minutes) {
+        const date = new Date(this.valueOf());
+        date.setMinutes(date.getMinutes() + minutes);
+        return date;
+    }
+
     app.post('/users/login', (req, res) => {
 
         const { email, password } = req.body
+        const date = new Date()
 
         User.findByEmailPassword(email, password).then((user) => {
-            cookies.set('user', user._id, { path: '/' });
-            res.status(200).send(user._id)
+            cookies.set('user', user._id, { path: '/', expires: date.addMinutes(1) });
+            res.status(200).send(user)
         }, (bad) => {
             res.status(400).send(bad)
         }).catch((err) => {
@@ -91,28 +127,52 @@ if (!isDev && cluster.isMaster) {
         })
     })
 
-    app.get('/users/logout', (req, res) => {
-        cookies.remove('user')
-        res.status(200).send()
+
+
+    app.post('/users/changeusername/:id', (req, res) => {
+        const id = req.params.id
+        const newusername = req.body['new username:']
+        User.findByUsername(newusername).then(user => {
+            res.status(400).send({ 'new username:': 'username is taken' })
+        }, nouser => {
+            User.findById(id).then(curruser => {
+                curruser.username = newusername
+                curruser.save()
+                res.status(200).send()
+            })
+        })
     })
 
+    app.post('/users/changepassword/:id', (req, res) => {
+        const id = req.params.id
+        const newpassword = req.body['new password:']
+
+        User.findById(id).then(curruser => {
+            curruser.password = newpassword
+            curruser.save()
+            res.status(200).send()
+        })
+
+    })
+
+    app.post('/users/changeprofilepicture/:id', (req, res) => {
+        const { photoId } = req.body
+        const id = req.params.id
+
+        User.findById(id).then(user => {
+            if (!user) {
+                res.status(400).send()
+            } else {
+                user.profilePicture = `/photos/${id}/${photoId}`
+                user.save()
+                res.status(200).send()
+            }
+        }).catch(err => res.status(500).send())
+    })
+
+
+
     const cities = JSON.parse(fs.readFileSync('./web-scraping/cities.json'))
-
-    //Five colour heatmap
-    function assignColour(popularity) {
-
-        if (popularity < 10) {
-            return "#ff3860" //danger
-        } else if (popularity < 30) {
-            return "#ffdd57" //warning
-        } else if (popularity < 50) {
-            return "#23d160" //success
-        } else if (popularity < 75) {
-            return "#209cee" //info
-        } else {
-            return "#00d1b2" //primary
-        }
-    }
 
     const globeData = cities.city.map((c) => {
         return {
@@ -120,7 +180,9 @@ if (!isDev && cluster.isMaster) {
             "latitude": Number(c.latitude),
             "longitude": Number(c.longitude),
             "url": encodeURI("/citypage/" + c.name),
-            "popularity": assignColour(Number(c.popularity))
+            "popularity": Number(c.popularity),
+            "city": c.name,
+            "country": c.country
         }
     })
 
@@ -128,12 +190,10 @@ if (!isDev && cluster.isMaster) {
         res.send(JSON.stringify(globeData))
     })
 
-
-
-
     app.get('/globeData/:id', (req, res) => {
         const city = req.params.id
         const data = cities.city.filter((c) => { return c.name === city })[0]
+        // console.log(data)
         const cityData = {
             city: data.name,
             country: data.country,
@@ -144,7 +204,148 @@ if (!isDev && cluster.isMaster) {
         res.status(200).send(JSON.stringify(cityData))
     })
 
+    app.post('/photos/:id', upload.single('avatar'), function (req, res) {
+        const owner = req.params.id
+        const img = req.file.buffer
+        const encode_image = img.toString('base64');
+        const finalImg = new Photo({
+            contentType: req.file.mimetype,
+            image: new Buffer.from(encode_image, 'base64'),
+            owner
+        })
+        finalImg.save()
+        res.redirect('back')
+    })
 
+    app.get('/photos/:owner_id', (req, res) => {
+        const owner = req.params.owner_id
+        Photo.find({ owner: owner }).then(photos => {
+            if (!photos) {
+                res.status(400).send()
+            } else {
+                res.contentType('image/jpeg')
+                res.send(photos.map(photo => {
+                    return {
+                        id: photo._id,
+                        active: false
+                    }
+                }))
+            }
+        }).catch(err => res.status(500).send())
+    })
+
+    app.delete('/photos/:owner_id/:photo_id', (req, res) => {
+        const owner = req.params.owner_id
+        const photoId = req.params.photo_id
+
+
+        if (!(owner === cookies.get('user'))) {
+            res.status(400).send()
+            return
+        }
+
+        Photo.findByIdAndDelete(photoId).catch(err => {
+            res.status(500).send()
+            return
+        })
+        res.status(200).send()
+    })
+
+    app.get('/photos/:owner_id/:photo_id', (req, res) => {
+        const owner = req.params.owner_id
+        const photoId = req.params.photo_id
+        Photo.findOne({ owner: owner, _id: photoId }).then(photo => {
+            if (!photo) {
+                // if the user deleted his profile picture then it will no longer
+                // exist in the photo schema but there will be a link to it in the 
+                // user schema
+                User.findById(owner).then(user => {
+                    // profile picture deleted
+                    if (user.profilePicture === photoId) {
+                        res.contentType('image/jpeg')
+                        Photo.findById("5d094080a16f8995904dfbe0").then(avatar => {
+                            res.contentType('image/jpeg')
+                            res.send(avatar)
+                        }, er => res.status(500).send())
+                    } else {
+                        res.contentType('image/jpeg')
+                        Photo.findById("5d094087a16f8995904dfbe1").then(empty => {
+                            res.contentType('image/jpeg')
+                            res.send(empty)
+                        }, er => res.status(500).send())
+                    }
+                })
+            } else {
+                res.contentType('image/jpeg');
+                res.send(photo.image.buffer)
+            }
+        }).catch(err => {
+            res.status(500).send()
+        })
+    })
+
+    app.post('/mementos/:owner_id', (req, res) => {
+        const owner = req.params.owner_id
+        const { description, photos, city, country } = req.body
+        const memento = new Memento({ description, photos, city, owner, country })
+        memento.save()
+
+        res.status(200).send()
+    })
+
+    app.post('/mementos/edit/:mem_id', (req, res) => {
+        const mem_id = req.params.mem_id
+        const { description, photos, city, country } = req.body
+        Memento.findOneAndUpdate({ _id: mem_id }, { $set: { description, photos, city, country } }).catch(err => {
+            res.status(500).send()
+            return
+        })
+        res.status(200).send('yay')
+    })
+
+    app.get('/mementos', (req, res) => {
+        Memento.find().then(mems => {
+            res.status(200).send(mems)
+        }).catch(err => res.status(500).send())
+    })
+
+    app.get('/mementos/user/:owner_id', (req, res, next) => {
+        const owner = req.params.owner_id
+        Memento.find({ owner: owner }).then(mementos => {
+            if (!mementos) {
+                res.status(400).send()
+            } else {
+                res.status(200).send(
+                    mementos.map(mem => {
+                        return {
+                            photos: mem.photos,
+                            id: mem._id,
+                            city: mem.city,
+                            description: mem.description,
+                            owner: mem.owner,
+                            active: false,
+                            country: mem.country
+                        }
+                    }))
+            }
+        }).catch(err => res.status(500).send())
+    })
+
+    app.get('/mementos/city/:city', (req, res) => {
+        const city = req.params.city
+        Memento.find({ city: city }).then(mems => {
+            res.status(200).send(mems)
+        }).catch(err => res.status(500).send())
+    })
+
+    app.delete('/mementos/user/:mem_id', (req, res) => {
+        const mem = req.params.mem_id
+        Memento.findByIdAndDelete(mem).catch(err => {
+            res.status(500).send()
+            return
+        })
+        res.status(200).send()
+    })
 
     // All remaining requests return the React app, so it can handle routing.
     app.get('*', function (request, response) {

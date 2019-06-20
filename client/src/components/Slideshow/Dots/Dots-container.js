@@ -14,14 +14,16 @@ import Dot from './Dots-view'
 
 // 6. "index" of the current directory
 
-const Dots = ({ numSlides, skipTo, position }) => {
+const Dots = ({ numSlides, skipTo, position, orientation, isHorizontal, id }) => {
     const arr = []
     for (let i = 0; i < numSlides; i++) {
         arr.push(
-            <Dot key={i} active={position === i} onClick={() => skipTo(i)} />
+            <Dot isHorizontal={isHorizontal} key={i} active={position === i} onClick={() => {
+                skipTo(i, id)
+            }} />
         )
     }
-    return <div className="dots"> {arr} </div>
+    return <div style={orientation}> {arr} </div>
 }
 
 Dots.propTypes = {

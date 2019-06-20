@@ -1,26 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Caption = ({ active, title, subtitle }) => {
-    return <section style={{ display: active ? 'block' : 'none' }}
-        id="slideshowcaption" className="hero is-primary" >
-        <div className="hero-body">
-            <div className="container">
-                <h1 className="title has-text-centered">
-                    {title}
-                </h1>
-                <h2 className="subtitle has-text-centered">
-                    {subtitle}
-                </h2>
-            </div>
-        </div>
+const Caption = ({ title, subtitle }) => {
+    return <section style={{
+        position: 'absolute',
+        top: '40%',
+        left: '20%',
+        color: '#fff'
+    }}
+    >
+        <h1> {title} </h1>
+        <h4> {subtitle} </h4>
+
     </section>
 }
 
 Caption.propTypes = {
     title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired
+    subtitle: PropTypes.string.isRequired
 }
 
 export default Caption

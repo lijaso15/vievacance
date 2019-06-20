@@ -6,6 +6,7 @@
     "@amcharts/amcharts4": "^4.4.6",
     "@amcharts/amcharts4-geodata": "^4.1.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
+    "@fortawesome/free-brands-svg-icons": "^5.8.2",
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.18.0",

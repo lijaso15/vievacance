@@ -4,11 +4,18 @@ import PropTypes from 'prop-types'
 // import log from '../utils/log'
 
 
-const Dot = ({ onClick, active }) => {
-    return <span className="dot" onClick={onClick}
-        style={{
-            backgroundColor: active ? 'grey' : '#bbb'
-        }}>  </span>
+const Dot = ({ onClick, active, isHorizontal }) => {
+    return <span style={{
+        cursor: 'pointer',
+        height: '15px',
+        width: '15px',
+        margin: '0 2px',
+        borderRadius: '50%',
+        display: isHorizontal ? 'inline-block' : 'block',
+        transition: 'background-color 0.6s ease',
+        backgroundColor: active ? 'grey' : '#bbb'
+    }} onClick={onClick}
+    >  </span>
 }
 
 Dot.propTypes = {

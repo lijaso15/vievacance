@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import './content.css'
 
 const ContentView = ({ images, paragraphs }) => {
-    console.log(paragraphs)
-    return <div>
+    return <div id="info">
         <article className="media">
             <div className="media-content">
                 <div className="content">

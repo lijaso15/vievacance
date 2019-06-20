@@ -3,14 +3,14 @@ import { skipTo } from '../../../actions'
 import Dots from './Dots-container'
 
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
-        position: state.position
+        position: state.position[ownProps.id]
     }
 }
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        skipTo: index => dispatch(skipTo(index))
+        skipTo: (index) => dispatch(skipTo(index, ownProps.id))
     }
 }
 

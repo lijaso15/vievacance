@@ -347,3 +347,8 @@
   [hidden] {
     display: none;
   }
+
+
+  #hero-body {
+    padding: 0 0
+  }

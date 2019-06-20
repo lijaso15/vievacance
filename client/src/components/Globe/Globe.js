@@ -49,11 +49,26 @@ class Globe extends Component {
         // grid.mapLines.template.line.stroke = am4core.color("#e33");
         // grid.mapLines.template.line.strokeOpacity = 0.2;
         chart.panBehavior = "rotateLongLat";
+        //Five colour heatmap
+        function assignColour(popularity) {
+
+            if (popularity < 10) {
+                return "#ff3860" //danger
+            } else if (popularity < 30) {
+                return "#ffdd57" //warning
+            } else if (popularity < 50) {
+                return "#23d160" //success
+            } else if (popularity < 75) {
+                return "#209cee" //info
+            } else {
+                return "#00d1b2" //primary
+            }
+        }
 
         axios.get('/globeData').then(res => {
             if (res.status === 200) {
                 imageSeries.data = (res.data).map(city => {
-                    return { ...city, fill: am4core.color(city.popularity) }
+                    return { ...city, fill: am4core.color(assignColour(city.popularity)) }
                 })
             }
         }).catch(err => alert(err))
@@ -70,7 +85,7 @@ class Globe extends Component {
 
     render() {
         return (
-            <div id="chartdiv" style={{ width: "100%", height: "500px" }}></div>
+            <div id="chartdiv"></div>
         );
     }
 }

@@ -2,10 +2,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 //presentational component
 
-const Slide = ({ image, active }) => {
-    return (<div>
-        <img className="slides" alt=""
-            style={{ display: active ? 'block' : 'none' }}
+const Slide = ({ image, isBox, isModal }) => {
+    return (<div className={isBox ? 'image is-square' : ''}>
+        <img style={isBox ? {
+            objectFit: 'cover'
+        } : (isModal ? {
+            width: '100%',
+            objectFit: 'contain',
+            borderStyle: 'groove'
+        } : {
+                top: 0,
+                left: 0,
+                width: '100%',
+                objectFit: 'cover',
+                height: '-webkit-fill-available'
+            })} alt=""
             src={image} />
     </div>)
 }
@@ -16,3 +27,5 @@ Slide.propTypes = {
 }
 
 export default Slide
+
+

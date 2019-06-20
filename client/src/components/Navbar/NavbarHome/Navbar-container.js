@@ -3,17 +3,17 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const Navbar = ({ active, authenticationError, toggleSignInButton, toggleSignUpButton, userHasLoggedOut, errorCleared }) => {
+const Navbar = ({ active, authenticationError, toggleSignInButton, toggleSignUpButton, setSignedIn, errorCleared, viewer }) => {
     return <NavbarView active={active}
         onProfileClick={() => {
-            return active ? window.location.replace('/profile') :
+            return active ? window.location.replace('/profile/' + viewer) :
                 authenticationError()
         }} onSigninClick={() => {
 
             if (active) {
                 // logout
                 axios.get('/users/logout').catch(err => alert(err))
-                userHasLoggedOut()
+                setSignedIn(false)
                 return
             } else {
                 errorCleared()
@@ -27,8 +27,9 @@ Navbar.propTypes = {
     authenticationError: PropTypes.func.isRequired,
     toggleSignInButton: PropTypes.func.isRequired,
     toggleSignUpButton: PropTypes.func.isRequired,
-    userHasLoggedOut: PropTypes.func.isRequired,
-    errorCleared: PropTypes.func.isRequired
+    setSignedIn: PropTypes.func.isRequired,
+    errorCleared: PropTypes.func.isRequired,
+    viewer: PropTypes.string.isRequired
 }
 
 export default Navbar

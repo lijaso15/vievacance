@@ -11,32 +11,18 @@ const bcrypt = require('bcryptjs')
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
-        minlength: 6,
-        maxlength: 20,
-        trim: true, // trim whitespace
-        unique: true,
+        required: true
     },
     email: {
         type: String,
         required: true,
         minlength: 1,
         trim: true, // trim whitespace
-        unique: true,
-        validate: {
-            validator: validator.isEmail,
-            message: 'Not valid email'
-        }
+        unique: true
     },
     password: {
         type: String,
-        required: true,
-        minlength: 6,
-        maxlength: 20,
-        validate: {
-            validator: (value) => { return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/g.test(value) },
-            message: '‘The password must contain at least 1 lowercase alphabetical character, at least 1 uppercase, and at least 1 numeric character'
-        }
+        required: true
     },
     isadmin: Boolean,
     profilePicture: String

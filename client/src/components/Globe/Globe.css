@@ -2,8 +2,9 @@
   
   #chartdiv {
     width: 100%;
-    height: 700px;
+    height: 650px;
     overflow: hidden;
+    border-bottom: 3px solid #fafafa;
   }
   
   /* div.footer {

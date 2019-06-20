@@ -5,12 +5,10 @@ import { Formik, Form, Field } from 'formik'
 import axios from "axios"
 import Input from './Input'
 import { connect } from 'react-redux'
-import { signedIn, errorCleared } from '../../actions'
+import { setSignedIn, errorCleared, setViewer, setOwner } from '../../actions'
 import './login.css'
 
-const Signin = ({ active, err, signedIn, errorCleared }) => {
-    // console.log('err?: ' + err)
-    // console.log('active?:' + active)
+const Signin = ({ active, err, setSignedIn, errorCleared, setViewer, setOwner }) => {
     return <div style={{ display: active ? 'block' : 'none' }} id="signin" className="box">
         <h1 className="title is-4">Signin</h1>
         <Formik
@@ -22,12 +20,13 @@ const Signin = ({ active, err, signedIn, errorCleared }) => {
             onSubmit={(values, actions) => {
                 errorCleared()
                 axios.post('/users/login', values).then((res) => {
-                    console.log(res)
                     if (res.status === 200) {
                         actions.setFieldValue('success', 'Success!')
                         setTimeout(() => {
-                            signedIn(res.data)
-                        }, 1500)
+                            setSignedIn(res.data._id)
+                            setViewer(res.data._id)
+                            setOwner(res.data)
+                        }, 500)
                     } else {
                         alert(res)
                     }
@@ -44,7 +43,7 @@ const Signin = ({ active, err, signedIn, errorCleared }) => {
 
             render={({ values, isSubmitting }) => (
                 <Form>
-                    <Field name="email" component={Input} type="email" placeholder="e.g. jasonli@frontend.io" icons={{ left: 'envelope', right: 'check' }} />
+                    <Field name="email" component={Input} type="email" placeholder="e.g. be@yonce.io" icons={{ left: 'envelope', right: 'check' }} />
                     <Field name="password" component={Input} type="password" placeholder="•••••••" icons={{ left: 'key', right: 'check' }} />
                     <button className="button is-link" type="submit" disabled={isSubmitting}>Submit</button>
                     {(err || values.success) && <article className={err ? "message is-danger is-small" : "message is-success is-small"}>
@@ -69,8 +68,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        signedIn: (id) => { return dispatch(signedIn(id)) },
-        errorCleared: () => { return dispatch(errorCleared()) }
+        setSignedIn: (id) => { return dispatch(setSignedIn(id)) },
+        errorCleared: () => { return dispatch(errorCleared()) },
+        setViewer: (id) => dispatch(setViewer(id)),
+        setOwner: (id) => dispatch(setOwner(id))
     }
 }
 

@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-// "mongodb+srv://dbUser:passwordpassword@cluster0-woqpi.mongodb.net/test?retryWrites=true" || 'mongodb://localhost:27017/StudentAPI'
+// "mongodb+srv://dbUser:passwordpassword@cluster0-woqpi.mongodb.net/test?retryWrites=true" || 'mongodb://localhost:27017/vievacanceAPI'
 
 
 mongoose.connect("mongodb+srv://dbUser:passwordpassword@cluster0-woqpi.mongodb.net/test?retryWrites=true", { useNewUrlParser: true, useCreateIndex: true });

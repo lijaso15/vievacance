@@ -2,9 +2,9 @@ import { nextSlide, prevSlide } from '../../actions'
 import { connect } from 'react-redux'
 import Slideshow from './Slideshow-container'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
-        position: state.position
+        position: state.position[ownProps.id]
     }
 }
 
