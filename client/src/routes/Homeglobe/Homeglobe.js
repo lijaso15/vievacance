@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 const Homeglobe = ({ setSignedIn, setViewer }) => {
 
     window.onload = () => {
-        axios.get('/users').then(res => {
+        axios.get('/users', { withCredentials: true }).then(res => {
             setSignedIn(res.data._id)
             setViewer(res.data._id)
         }).catch(err => alert(err))

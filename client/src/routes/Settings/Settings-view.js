@@ -11,10 +11,9 @@ import { Redirect } from 'react-router-dom'
 const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, access }) => {
 
     window.onload = () => {
-        axios.get('/users').then(res => {
+        axios.get('/users', { withCredentials: true }).then(res => {
             setSignedIn(res.data._id)
             setViewer(res.data._id)
-
         }).catch(err => alert(err))
 
         // match.params.id is the visitor

@@ -12,7 +12,7 @@ import Memento from '../../components/Cards/Mementos'
 const ProfileView = ({ setSignedIn, setOwner, setViewer, match, fullAccess, loadData, newSlide, setError, wasCalled }) => {
 
     window.onload = () => {
-        axios.get('/users').then(res => {
+        axios.get('/users', { withCredentials: true }).then(res => {
             axios.get(`/users/${match.params.id}`).then(r => {
                 setSignedIn(res.data._id)
                 setViewer(res.data._id)

@@ -13,7 +13,7 @@ import Memento from '../../components/Cards/Mementos'
 const City = ({ loadData, match, setSignedIn, setViewer, newSlide }) => {
 
     window.onload = () => {
-        axios.get('/users').then(res => {
+        axios.get('/users', { withCredentials: true }).then(res => {
             setSignedIn(res.data._id)
             setViewer(res.data._id)
         }).catch(err => alert(err))
