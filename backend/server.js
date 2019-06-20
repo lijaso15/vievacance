@@ -31,7 +31,10 @@ if (!isDev && cluster.isMaster) {
     });
 
 } else {
+    const cors = require('cors')
+
     const app = express();
+    app.use(cors())
     const cookies = new Cookies();
     app.use(bodyParser.json())
     const upload = multer()
