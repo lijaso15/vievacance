@@ -47,7 +47,7 @@ if (!isDev && cluster.isMaster) {
         secret: 'oursecret',
         resave: false,
         cookie: {
-            expires: 600000,
+            expires: 600000 * 3,
             secure: true
         },
         saveUninitialized: false
