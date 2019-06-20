@@ -106,19 +106,13 @@ if (!isDev && cluster.isMaster) {
         })
     })
 
-    Date.prototype.addMinutes = function (minutes) {
-        const date = new Date(this.valueOf());
-        date.setMinutes(date.getMinutes() + minutes);
-        return date;
-    }
-
     app.post('/users/login', (req, res) => {
 
         const { email, password } = req.body
         const date = new Date()
 
         User.findByEmailPassword(email, password).then((user) => {
-            cookies.set('user', user._id, { path: '/', expires: date.addMinutes(1) });
+            cookies.set('user', user._id, { path: '/' });
             res.status(200).send(user)
         }, (bad) => {
             res.status(400).send(bad)
