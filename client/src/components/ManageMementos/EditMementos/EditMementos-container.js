@@ -5,21 +5,23 @@ import React from 'react'
 const EditMementos = ({ owner, photos, title, description, id, profilePicture, username, onClick, loadData, selectedPhotos, cities, _id, setError, wasCalled, message }) => {
 
     if (!wasCalled) {
-        axios.get(`/photos/${owner}`).then(res => {
-            loadData(res.data.map(p => {
-                return photos.includes(p.id) ? { ...p, active: true } : p
-            }), 'PHOTOS')
-        })
-        axios.get(`/globeData`).then(res => {
-            loadData(res.data.map(c => {
-                return {
-                    city: c.city,
-                    country: c.country,
-                    active: c.city + ', ' + c.country === title
-                }
-            }), 'CITIES')
-        }).catch(err => alert(err))
-        setError('ERR_EDIT')
+        window.onload = () => {
+            axios.get(`/photos/${owner}`).then(res => {
+                loadData(res.data.map(p => {
+                    return photos.includes(p.id) ? { ...p, active: true } : p
+                }), 'PHOTOS')
+            })
+            axios.get(`/globeData`).then(res => {
+                loadData(res.data.map(c => {
+                    return {
+                        city: c.city,
+                        country: c.country,
+                        active: c.city + ', ' + c.country === title
+                    }
+                }), 'CITIES')
+            }).catch(err => alert(err))
+            setError('ERR_EDIT')
+        }
     }
 
     return <EditMementosView owner={owner} photos={photos} title={title} description={description}

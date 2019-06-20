@@ -11,35 +11,38 @@ import Memento from '../../components/Cards/Mementos'
 
 const ProfileView = ({ setSignedIn, setOwner, setViewer, match, fullAccess, loadData, newSlide, setError, wasCalled }) => {
 
-    axios.get('/users').then(res => {
-        setSignedIn(res.data._id)
-        setViewer(res.data._id)
+    window.onload = () => {
+        axios.get('/users').then(res => {
+            setSignedIn(res.data._id)
+            setViewer(res.data._id)
 
-    }).catch(err => alert(err))
-
-    axios.get(`/users/${match.params.id}`).then(res => {
-        setOwner(res.data)
-    }).catch(err => alert(err))
-
-    if (!wasCalled) {
-        axios.get(`/mementos/user/${match.params.id}`).then(res => {
-            if (res.status === 200) {
-                res.data.map((mem) => {
-                    newSlide()
-                    axios.get(`/users/${mem.owner}`).then(r => {
-                        loadData({
-                            ...mem,
-                            username: r.data.username,
-                            profilePicture: r.data.profilePicture
-                        }, 'MEMENTOS')
-                    })
-                })
-            } else {
-                alert(res)
-            }
         }).catch(err => alert(err))
+
+        axios.get(`/users/${match.params.id}`).then(res => {
+            setOwner(res.data)
+        }).catch(err => alert(err))
+
+        if (!wasCalled) {
+            axios.get(`/mementos/user/${match.params.id}`).then(res => {
+                if (res.status === 200) {
+                    res.data.map((mem) => {
+                        newSlide()
+                        axios.get(`/users/${mem.owner}`).then(r => {
+                            loadData({
+                                ...mem,
+                                username: r.data.username,
+                                profilePicture: r.data.profilePicture
+                            }, 'MEMENTOS')
+                        })
+                    })
+                } else {
+                    alert(res)
+                }
+            }).catch(err => alert(err))
+        }
+        setError('ERR_PROFILE')
     }
-    setError('ERR_PROFILE')
+
     return (
         <div>
             <NavbarOther />

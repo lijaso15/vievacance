@@ -9,21 +9,24 @@ import ChangeSettings from '../../components/ChangeSettings'
 import { Redirect } from 'react-router-dom'
 
 const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, access }) => {
-    axios.get('/users').then(res => {
-        setSignedIn(res.data._id)
-        setViewer(res.data._id)
 
-    }).catch(err => alert(err))
+    window.onload = () => {
+        axios.get('/users').then(res => {
+            setSignedIn(res.data._id)
+            setViewer(res.data._id)
 
-    // match.params.id is the visitor
-    // objective is to compare the visitor with the owner
-    axios.get(`/users/${match.params.id}`).then(res => {
-        setOwner(res.data)
-    }).catch(err => alert(err))
+        }).catch(err => alert(err))
 
-    axios.get(`/photos/${match.params.id}`).then(res => {
-        loadData(res.data, 'PHOTOS')
-    })
+        // match.params.id is the visitor
+        // objective is to compare the visitor with the owner
+        axios.get(`/users/${match.params.id}`).then(res => {
+            setOwner(res.data)
+        }).catch(err => alert(err))
+
+        axios.get(`/photos/${match.params.id}`).then(res => {
+            loadData(res.data, 'PHOTOS')
+        })
+    }
 
     if (!access) {
         return <Redirect to="/homeglobe" />

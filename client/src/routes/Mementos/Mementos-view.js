@@ -10,29 +10,31 @@ import { Redirect } from 'react-router-dom'
 
 
 const MementosView = ({ setSignedIn, setOwner, setViewer, match, loadData, access }) => {
-    axios.get('/users').then(res => {
-        setSignedIn(res.data._id)
-        setViewer(res.data._id)
 
-    }).catch(err => alert(err))
+    window.onload = () => {
+        axios.get('/users').then(res => {
+            setSignedIn(res.data._id)
+            setViewer(res.data._id)
 
-    axios.get(`/users/${match.params.id}`).then(res => {
-        setOwner(res.data)
-    }).catch(err => alert(err))
+        }).catch(err => alert(err))
 
-    axios.get(`/globeData`).then(res => {
-        loadData(res.data.map(c => {
-            return {
-                city: c.city,
-                country: c.country
-            }
-        }), 'CITIES')
-    }).catch(err => alert(err))
+        axios.get(`/users/${match.params.id}`).then(res => {
+            setOwner(res.data)
+        }).catch(err => alert(err))
 
-    axios.get(`/photos/${match.params.id}`).then(res => {
-        loadData(res.data, 'PHOTOS')
-    })
+        axios.get(`/globeData`).then(res => {
+            loadData(res.data.map(c => {
+                return {
+                    city: c.city,
+                    country: c.country
+                }
+            }), 'CITIES')
+        }).catch(err => alert(err))
 
+        axios.get(`/photos/${match.params.id}`).then(res => {
+            loadData(res.data, 'PHOTOS')
+        })
+    }
     if (!access) {
         return <Redirect to="/homeglobe" />
     }

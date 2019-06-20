@@ -11,10 +11,16 @@ import { setSignedIn, setViewer } from '../../actions'
 import { connect } from 'react-redux'
 
 const Homeglobe = ({ setSignedIn, setViewer }) => {
-    axios.get('/users').then(res => {
-        setSignedIn(res.data._id)
-        setViewer(res.data._id)
-    }).catch(err => alert(err))
+
+    window.onload = () => {
+        axios.get('/users').then(res => {
+            setSignedIn(res.data._id)
+            setViewer(res.data._id)
+        }).catch(err => alert(err))
+    }
+
+
+
     return <div>
         <Navbar />
         <Globe />
