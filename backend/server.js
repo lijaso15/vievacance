@@ -46,11 +46,11 @@ if (!isDev && cluster.isMaster) {
     app.use(session({
         secret: 'oursecret',
         resave: false,
-        saveUninitialized: false,
         cookie: {
-            expires: 600000
-            // httpOnly: true
+            expires: 600000,
+            secure: true
         },
+        saveUninitialized: false,
         proxy: true
     }))
 
