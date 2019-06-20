@@ -16,6 +16,7 @@ const Homeglobe = ({ setSignedIn, setViewer }) => {
         axios.get('/users').then(res => {
             setSignedIn(res.data._id)
             setViewer(res.data._id)
+            alert(res.data._id)
         }).catch(err => alert(err))
     }
 

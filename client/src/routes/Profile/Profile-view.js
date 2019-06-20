@@ -21,8 +21,6 @@ const ProfileView = ({ setSignedIn, setOwner, setViewer, match, fullAccess, load
 
         }).catch(err => alert(err))
 
-
-
         if (!wasCalled) {
             axios.get(`/mementos/user/${match.params.id}`).then(res => {
                 if (res.status === 200) {
