@@ -47,10 +47,13 @@ if (!isDev && cluster.isMaster) {
             User.findById(id).then(user => {
                 if (!user) {
                     res.status(400).send()
+                    return
                 } else {
                     res.status(200).send(user)
+                    return
                 }
             }).catch(err => res.status(500).send())
+            return
         } else {
             res.send({ _id: false })
         }
@@ -71,6 +74,7 @@ if (!isDev && cluster.isMaster) {
                     res.status(200).send(user)
                 }
             }).catch(err => res.status(500).send())
+            return
         } else {
             res.send({ _id: false })
         }
@@ -109,7 +113,6 @@ if (!isDev && cluster.isMaster) {
     app.post('/users/login', (req, res) => {
 
         const { email, password } = req.body
-        const date = new Date()
 
         User.findByEmailPassword(email, password).then((user) => {
             cookies.set('user', user._id, { path: '/' });
