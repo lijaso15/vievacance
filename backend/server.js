@@ -47,11 +47,9 @@ if (!isDev && cluster.isMaster) {
         secret: 'oursecret',
         resave: false,
         cookie: {
-            expires: 600000,
-            secure: true
+            expires: 600000
         },
-        saveUninitialized: false,
-        proxy: true
+        saveUninitialized: false
     }))
 
 
