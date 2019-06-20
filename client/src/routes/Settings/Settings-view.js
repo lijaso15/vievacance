@@ -15,6 +15,9 @@ const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, acces
             if (done) {
                 setSignedIn(done)
                 setViewer(done)
+                axios.get(`/users/${match.params.id}`).then(res => {
+                    setOwner(res.data)
+                }).catch(err => alert(err))
                 return
             }
             axios.get('/users', { withCredentials: true }).then(res => {
@@ -27,9 +30,7 @@ const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, acces
 
         // match.params.id is the visitor
         // objective is to compare the visitor with the owner
-        axios.get(`/users/${match.params.id}`).then(res => {
-            setOwner(res.data)
-        }).catch(err => alert(err))
+
 
         axios.get(`/photos/${match.params.id}`).then(res => {
             loadData(res.data, 'PHOTOS')

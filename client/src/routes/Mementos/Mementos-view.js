@@ -12,15 +12,22 @@ import { Redirect } from 'react-router-dom'
 const MementosView = ({ setSignedIn, setOwner, setViewer, match, loadData, access }) => {
 
     window.onload = () => {
-        axios.get('/users').then(res => {
-            setSignedIn(res.data._id)
-            setViewer(res.data._id)
-
-        }).catch(err => alert(err))
-
-        axios.get(`/users/${match.params.id}`).then(res => {
-            setOwner(res.data)
-        }).catch(err => alert(err))
+        function waitForUser(done) {
+            if (done) {
+                setSignedIn(done)
+                setViewer(done)
+                axios.get(`/users/${match.params.id}`).then(res => {
+                    setOwner(res.data)
+                }).catch(err => alert(err))
+                return
+            }
+            axios.get('/users', { withCredentials: true }).then(res => {
+                // setSignedIn(res.data._id)
+                // setViewer(res.data._id)
+                waitForUser(res.data._id)
+            }).catch(err => alert(err))
+        }
+        waitForUser(false)
 
         axios.get(`/globeData`).then(res => {
             loadData(res.data.map(c => {
