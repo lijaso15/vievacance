@@ -38,6 +38,7 @@ if (!isDev && cluster.isMaster) {
     const cookies = new Cookies();
     app.use(bodyParser.json())
     const upload = multer()
+    app.disable('etag');
 
     // Priority serve any static files.
     app.use(express.static(path.resolve(__dirname, '../client/build')));
