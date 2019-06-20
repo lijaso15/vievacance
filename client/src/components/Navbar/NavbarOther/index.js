@@ -12,6 +12,7 @@ const NavbarOther = ({ authenticationError, active, setSignedIn, viewer }) => {
         if (active) {
             axios.get('/users/logout').catch(err => alert(err))
             setSignedIn(false)
+            window.location.reload()
             return
         } else {
             return window.location.replace('/homeglobe')

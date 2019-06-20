@@ -29,8 +29,18 @@ const City = ({ loadData, setSignedIn, setViewer, newSlide }) => {
         }).catch(err => alert(err))
 
         axios.get('/mementos').then(res => {
-            res.data.map(() => newSlide())
-            loadData(res.data, 'MEMENTOS')
+            if (res.data.length) {
+                res.data.map((mem) => {
+                    newSlide()
+                    axios.get(`/users/${mem.owner}`).then(r => {
+                        loadData({
+                            ...mem,
+                            username: r.data.username,
+                            profilePicture: r.data.profilePicture
+                        }, 'MEMENTOS')
+                    })
+                })
+            }
         }).catch(err => alert(err))
     }
 

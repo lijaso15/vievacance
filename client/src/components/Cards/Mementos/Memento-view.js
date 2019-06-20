@@ -58,14 +58,15 @@ const MementoView = ({ owner, photos, title, description, active, onClick, id, f
                             <p class="modal-card-title">
                                 <article class="media">
                                     <figure class="media-left">
-                                        <p class="image" style={{
+                                        <p class="image is-square" style={{
                                             width: '2.25em',
-                                            height: '2.25em',
-                                            objectFit: 'cover'
+                                            height: '2.25em'
+
                                         }}>
                                             <img class="is-rounded" src={profilePicture} style={{
                                                 borderColor: 'rgb(0, 209, 178)',
-                                                borderStyle: 'groove'
+                                                borderStyle: 'groove',
+                                                objectFit: 'cover'
                                             }} />
                                         </p>
                                     </figure>

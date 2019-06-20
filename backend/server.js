@@ -263,13 +263,13 @@ if (!isDev && cluster.isMaster) {
                     // profile picture deleted
                     if (user.profilePicture === photoId) {
                         res.contentType('image/jpeg')
-                        Photo.findById("5d094080a16f8995904dfbe0").then(avatar => {
+                        Photo.findById("5d0b0e1c9acf788a0eee68fa").then(avatar => {
                             res.contentType('image/jpeg')
                             res.send(avatar)
                         }, er => res.status(500).send())
                     } else {
                         res.contentType('image/jpeg')
-                        Photo.findById("5d094087a16f8995904dfbe1").then(empty => {
+                        Photo.findById("5d0b0e329acf788a0eee68fb").then(empty => {
                             res.contentType('image/jpeg')
                             res.send(empty)
                         }, er => res.status(500).send())

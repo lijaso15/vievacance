@@ -4,7 +4,7 @@ import Cities from '../Cities'
 import PhotoCards from '../../Cards/PhotoCards'
 
 const CreateMementosView = ({ owner, createMemento, message }) => {
-    return <div className="column">
+    return <div className="column is-three-quarters">
         <section class="hero is-light">
             <div class="hero-body">
                 <div class="container">
@@ -45,7 +45,7 @@ const CreateMementosView = ({ owner, createMemento, message }) => {
         }} className="label">Add Description </label>
 
         <div class="control">
-            <textarea class="textarea is-primary" placeholder="limit 1000 characters"></textarea>
+            <textarea class="textarea is-primary" placeholder="description"></textarea>
         </div>
         {message ? <article className={message === 'Success!' ? "message is-success is-small" : "message is-danger is-small"}>
             <div className="message-body">

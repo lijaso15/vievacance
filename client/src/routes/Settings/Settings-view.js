@@ -42,6 +42,7 @@ const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, acces
                 }}>
                 <Drawer location='/settings' fullAccess />
                 <ChangeSettings />
+                <div className='column is-1'> </div>
             </div>
             <Footer />
         </div>

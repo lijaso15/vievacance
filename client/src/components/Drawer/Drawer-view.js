@@ -12,12 +12,14 @@ const DrawerView = ({ _id, username, profilePicture, location, fullAccess }) => 
             <figure id="figure" className="image is-square"
                 style={{
                     backgroundColor: 'hsl(0, 0%, 96%)'
+
                 }}
             >
                 <img className="is-rounded" src={profilePicture ? profilePicture : avatar} alt=""
                     style={{
                         borderColor: '#00d1b2',
-                        borderStyle: 'groove'
+                        borderStyle: 'groove',
+                        objectFit: 'cover'
                     }}
                 />
             </figure>

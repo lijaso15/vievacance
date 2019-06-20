@@ -13,14 +13,15 @@ const ProfileView = ({ setSignedIn, setOwner, setViewer, match, fullAccess, load
 
     window.onload = () => {
         axios.get('/users').then(res => {
-            setSignedIn(res.data._id)
-            setViewer(res.data._id)
+            axios.get(`/users/${match.params.id}`).then(r => {
+                setSignedIn(res.data._id)
+                setViewer(res.data._id)
+                setOwner(r.data)
+            }).catch(err => alert(err))
 
         }).catch(err => alert(err))
 
-        axios.get(`/users/${match.params.id}`).then(res => {
-            setOwner(res.data)
-        }).catch(err => alert(err))
+
 
         if (!wasCalled) {
             axios.get(`/mementos/user/${match.params.id}`).then(res => {
@@ -53,6 +54,7 @@ const ProfileView = ({ setSignedIn, setOwner, setViewer, match, fullAccess, load
                 }}>
                 <Drawer location='/profile' fullAccess={fullAccess} />
                 <Memento fullAccess={fullAccess} />
+                <div className='column is-1'> </div>
 
             </div>
             <Footer />
