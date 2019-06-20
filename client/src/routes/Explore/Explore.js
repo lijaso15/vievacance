@@ -13,10 +13,19 @@ import bg from '../../assets/the-colours-of-amsterdam.jpg'
 const City = ({ loadData, setSignedIn, setViewer, newSlide }) => {
 
     window.onload = () => {
-        axios.get('/users', { withCredentials: true }).then(res => {
-            setSignedIn(res.data._id)
-            setViewer(res.data._id)
-        }).catch(err => alert(err))
+        function waitForUser(done) {
+            if (done) {
+                setSignedIn(done)
+                setViewer(done)
+                return
+            }
+            axios.get('/users', { withCredentials: true }).then(res => {
+                // setSignedIn(res.data._id)
+                // setViewer(res.data._id)
+                waitForUser(res.data._id)
+            }).catch(err => alert(err))
+        }
+        waitForUser(false)
 
         axios.get(`/globeData`).then(res => {
             loadData(res.data.map(c => {

@@ -11,10 +11,19 @@ import { Redirect } from 'react-router-dom'
 const SettingsView = ({ setSignedIn, setOwner, setViewer, match, loadData, access }) => {
 
     window.onload = () => {
-        axios.get('/users', { withCredentials: true }).then(res => {
-            setSignedIn(res.data._id)
-            setViewer(res.data._id)
-        }).catch(err => alert(err))
+        function waitForUser(done) {
+            if (done) {
+                setSignedIn(done)
+                setViewer(done)
+                return
+            }
+            axios.get('/users', { withCredentials: true }).then(res => {
+                // setSignedIn(res.data._id)
+                // setViewer(res.data._id)
+                waitForUser(res.data._id)
+            }).catch(err => alert(err))
+        }
+        waitForUser(false)
 
         // match.params.id is the visitor
         // objective is to compare the visitor with the owner
