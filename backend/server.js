@@ -11,6 +11,7 @@ const { User } = require('./models/User')
 const { Photo } = require('./models/Photo')
 const { Memento } = require('./models/Memento')
 const Cookies = require('universal-cookie');
+const session = require('express-session')
 
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
@@ -37,12 +38,22 @@ if (!isDev && cluster.isMaster) {
 
     // Priority serve any static files.
     app.use(express.static(path.resolve(__dirname, '../client/build')));
-
+    app.set('trust proxy', 1)
+    app.use(session({
+        secret: 'oursecret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            expires: 600000,
+            httpOnly: true
+        }
+    }))
 
 
     // Answer API requests.
     app.get('/users', (req, res) => {
-        const id = cookies.get('user')
+        console.log(req.session)
+        const id = req.session.user
         if (id) {
             User.findById(id).then(user => {
                 if (!user) {
@@ -60,8 +71,13 @@ if (!isDev && cluster.isMaster) {
     })
 
     app.get('/users/logout', (req, res) => {
-        cookies.remove('user')
-        res.status(200).send()
+        req.session.destroy((error) => {
+            if (error) {
+                res.status(500).send(error)
+            } else {
+                res.status(200).send()
+            }
+        })
     })
 
     app.get('/users/:id', (req, res) => {
@@ -115,7 +131,7 @@ if (!isDev && cluster.isMaster) {
         const { email, password } = req.body
 
         User.findByEmailPassword(email, password).then((user) => {
-            cookies.set('user', user._id, { path: '/' });
+            req.session.user = user._id
             res.status(200).send(user)
         }, (bad) => {
             res.status(400).send(bad)
