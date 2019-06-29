@@ -1,16 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import BannerView from './Banner-view'
+import React from "react";
+import PropTypes from "prop-types";
+import BannerView from "./Banner-view";
 
 const Banner = ({ onLoad, id, value }) => {
-    return <BannerView city={onLoad.city}
-        country={onLoad.country} popularity={onLoad.popularity}
-        value={value.toLowerCase()}
+  return (
+    <BannerView
+      city={onLoad.city}
+      country={onLoad.country}
+      popularity={onLoad.popularity}
+      value={value ? value.toLowerCase() : undefined}
     />
-}
+  );
+};
 
 Banner.propTypes = {
-    onLoad: PropTypes.object.isRequired
-}
+  onLoad: PropTypes.object.isRequired
+};
 
-export default Banner
+export default Banner;
