@@ -23,8 +23,19 @@ const City = ({ loadData, match, setSignedIn, setViewer, newSlide }) => {
       .then(res => {
         if (res.status === 200) {
           if (res.data.length) {
-            res.data.map(() => newSlide());
-            loadData(res.data, "MEMENTOS");
+            res.data.map(mem => {
+              newSlide();
+              axios.get(`/users/${mem.owner}`).then(r => {
+                loadData(
+                  {
+                    ...mem,
+                    username: r.data.username,
+                    profilePicture: r.data.profilePicture
+                  },
+                  "MEMENTOS"
+                );
+              });
+            });
           }
         } else {
           alert(res);

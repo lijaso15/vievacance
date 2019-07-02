@@ -11,7 +11,8 @@ const MementoView = ({ owner, photos, title, description, active, onClick, id, f
     if ((typeof (value) === 'string' && title.toLowerCase().includes(value)) || typeof (value) === 'undefined') {
         return <div class="column is-one-quarter"
             style={{
-                borderStyle: 'groove'
+                borderStyle: 'groove',
+                backgroundColor: 'white'
             }}
         >
             <figure onClick={onClick} id="info" className="image container" style={{ width: '100%' }}>

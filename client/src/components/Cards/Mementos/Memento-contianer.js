@@ -46,6 +46,7 @@ const Memento = ({
       <div className="column">
         <div id="info" className="columns is-gapless is-multiline is-mobile">
           {data.map((mem, id) => {
+            console.log(mem);
             return (
               <MementoView
                 owner={mem.owner}
