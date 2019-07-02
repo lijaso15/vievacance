@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 const mapStateToProps = (state, ownProps) => {
   if (!(ownProps.id || ownProps.id === 0)) {
     const { city, popularity, country } = state.data.city;
-    console.log("here");
     return {
       onLoad: { city, popularity, country }
     };
