@@ -1,36 +1,49 @@
-import NavbarView from '../Navbar-view'
-import axios from 'axios'
-import PropTypes from 'prop-types'
-import React from 'react'
+import NavbarView from "../Navbar-view";
+import PropTypes from "prop-types";
+import React from "react";
+import logout from "../../../utils/logout";
 
-const Navbar = ({ active, authenticationError, toggleSignInButton, toggleSignUpButton, setSignedIn, errorCleared, viewer }) => {
-    return <NavbarView active={active}
-        onProfileClick={() => {
-            return active ? window.location.replace('/profile/' + viewer) :
-                authenticationError()
-        }} onSigninClick={() => {
-
-            if (active) {
-                // logout
-                axios.get('/users/logout').catch(err => alert(err))
-                setSignedIn(false)
-                return
-            } else {
-                errorCleared()
-                toggleSignInButton()
-            }
-        }} onSignupClick={() => toggleSignUpButton()} />
-}
+const Navbar = ({
+  active,
+  authenticationError,
+  toggleSignInButton,
+  toggleSignUpButton,
+  setSignedIn,
+  errorCleared,
+  viewer
+}) => {
+  return (
+    <NavbarView
+      active={active}
+      onProfileClick={() => {
+        return active
+          ? window.location.replace("/profile/" + viewer)
+          : authenticationError();
+      }}
+      onSigninClick={() => {
+        if (active) {
+          // logout
+          setSignedIn(false);
+          logout(false);
+          return;
+        } else {
+          errorCleared();
+          toggleSignInButton();
+        }
+      }}
+      onSignupClick={() => toggleSignUpButton()}
+    />
+  );
+};
 
 Navbar.propTypes = {
-    active: PropTypes.bool.isRequired,
-    authenticationError: PropTypes.func.isRequired,
-    toggleSignInButton: PropTypes.func.isRequired,
-    toggleSignUpButton: PropTypes.func.isRequired,
-    setSignedIn: PropTypes.func.isRequired,
-    errorCleared: PropTypes.func.isRequired,
-    viewer: PropTypes.string.isRequired
-}
+  active: PropTypes.bool.isRequired,
+  authenticationError: PropTypes.func.isRequired,
+  toggleSignInButton: PropTypes.func.isRequired,
+  toggleSignUpButton: PropTypes.func.isRequired,
+  setSignedIn: PropTypes.func.isRequired,
+  errorCleared: PropTypes.func.isRequired,
+  viewer: PropTypes.string.isRequired
+};
 
-export default Navbar
-
+export default Navbar;

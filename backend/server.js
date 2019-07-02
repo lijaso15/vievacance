@@ -75,8 +75,18 @@ if (!isDev && cluster.isMaster) {
     })
 
     app.get('/users/logout', (req, res) => {
-        req.session = null
-        res.status(200).send()
+
+        if (res.session) {
+            res.status(200).send(false)
+        } else {
+            req.session.destroy(err => {
+                if (err) {
+                    res.status(500).send()
+                } else {
+                    res.status(200).send(true)
+                }
+            })
+        }
     })
 
     app.get('/users/:id', (req, res) => {
