@@ -76,7 +76,7 @@ if (!isDev && cluster.isMaster) {
 
     app.get('/users/logout', (req, res) => {
 
-        if (res.session) {
+        if (req.session) {
             res.status(200).send(false)
         } else {
             req.session.destroy(err => {
@@ -285,13 +285,13 @@ if (!isDev && cluster.isMaster) {
                     // profile picture deleted
                     if (user.profilePicture === photoId) {
                         res.contentType('image/jpeg')
-                        Photo.findById("5d0b0e1c9acf788a0eee68fa").then(avatar => {
+                        Photo.findById("5d1bd57280c816eacdaac0db").then(avatar => {
                             res.contentType('image/jpeg')
                             res.send(avatar)
                         }, er => res.status(500).send())
                     } else {
                         res.contentType('image/jpeg')
-                        Photo.findById("5d0b0e329acf788a0eee68fb").then(empty => {
+                        Photo.findById("5d1bd57d80c816eacdaac0dc").then(empty => {
                             res.contentType('image/jpeg')
                             res.send(empty)
                         }, er => res.status(500).send())

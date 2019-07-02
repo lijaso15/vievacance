@@ -34,24 +34,6 @@ const ProfileView = ({
             setSignedIn(done);
             setViewer(done);
             setOwner(r.data);
-            axios
-              .get(`/globeData`)
-              .then(res => {
-                loadData(
-                  res.data.map(c => {
-                    return {
-                      city: c.city,
-                      country: c.country
-                    };
-                  }),
-                  "CITIES"
-                );
-              })
-              .catch(err => alert(err));
-
-            axios.get(`/photos/${match.params.id}`).then(res => {
-              loadData(res.data, "PHOTOS");
-            });
           })
           .catch(err => alert(err));
         return;
