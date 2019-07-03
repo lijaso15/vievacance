@@ -28,14 +28,9 @@ const ProfileView = ({
   window.onload = () => {
     function waitForUser(done) {
       if (done) {
-        axios
-          .get(`/users/${match.params.id}`)
-          .then(r => {
-            setSignedIn(done);
-            setViewer(done);
-            setOwner(r.data);
-          })
-          .catch(err => alert(err));
+        setSignedIn(done);
+        setViewer(done);
+
         return;
       }
       axios
@@ -50,6 +45,12 @@ const ProfileView = ({
 
     if (!wasCalled) {
       waitForUser(false);
+      axios
+        .get(`/users/${match.params.id}`)
+        .then(r => {
+          setOwner(r.data);
+        })
+        .catch(err => alert(err));
       axios
         .get(`/mementos/user/${match.params.id}`)
         .then(res => {
