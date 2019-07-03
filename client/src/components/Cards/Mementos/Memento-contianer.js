@@ -54,9 +54,11 @@ const Memento = ({
                 active={mem.active}
                 onClick={() => {
                   updateData(
-                    data.map(m =>
-                      m.id === mem.id ? { ...m, active: !m.active } : m
-                    ),
+                    data.map(m => {
+                      return m._id === mem._id
+                        ? { ...m, active: !m.active }
+                        : m;
+                    }),
                     "MEMENTOS"
                   );
                 }}
