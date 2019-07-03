@@ -84,7 +84,7 @@ if (!isDev && cluster.isMaster) {
       res.status(200).send(false);
       return;
     } else {
-      req.session = null;
+      req.session.cookie.expires = new Date().getTime();
       res.status(200).send(true);
     }
   });
