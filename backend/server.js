@@ -84,13 +84,8 @@ if (!isDev && cluster.isMaster) {
       res.status(200).send(false);
       return;
     } else {
-      req.session.destroy(err => {
-        if (err) {
-          res.status(500).send();
-        } else {
-          res.status(200).send(true);
-        }
-      });
+      req.session = null;
+      res.status(200).send(true);
     }
   });
 
