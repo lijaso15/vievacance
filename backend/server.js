@@ -84,8 +84,10 @@ if (!isDev && cluster.isMaster) {
       res.status(200).send(false);
       return;
     } else {
-      req.session.cookie.expires = new Date().getTime();
-      res.status(200).send(true);
+      req.session.destroy(function() {
+        res.clearCookie("connect.sid", { path: "/" });
+        res.status(200).send(true);
+      });
     }
   });
 
