@@ -51,7 +51,7 @@ if (!isDev && cluster.isMaster) {
       resave: false,
       cookie: {
         expires: 600000 * 3,
-        secure: true
+        // secure: true
       },
       saveUninitialized: false
     })
