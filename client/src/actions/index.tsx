@@ -87,6 +87,12 @@ export const setFilter = value => {
   };
 };
 
+export const setToggle = label => {
+  return {
+    type: "TOGGLE_" + label
+  };
+};
+
 export const setEditing = () => {
   return { type: "EDITING" };
 };

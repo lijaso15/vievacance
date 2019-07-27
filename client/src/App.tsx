@@ -9,12 +9,13 @@ import {
   faEnvelope,
   faKey,
   faCheck,
-  faHeart,
   faGlobe,
   faEdit,
-  faSearch
+  faSearch,
+  faHeart
 } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
 import City from "./routes/City";
 import ProfileView from "./routes/Profile";
 import SettingsView from "./routes/Settings";
@@ -32,7 +33,9 @@ library.add(
   fab,
   faGlobe,
   faEdit,
-  faSearch
+  faSearch,
+  faHeart,
+  far
 );
 
 class App extends Component {

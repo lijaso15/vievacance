@@ -2,109 +2,60 @@ import Memento from "./Momento";
 import React from "react";
 import { connect } from "react-redux";
 import { updateData } from "../../../actions";
+import Message from "../../Message";
+import { MementosProps } from "../../../types";
 
-type data = Array<{
-  owner: string;
-  photos: Array<{
-    title: string;
-    subtitle: string;
-    image: string;
-  }>;
-  city: string;
-  country: string;
-  description: string;
-  active: boolean;
-  profilePicture: string;
-  username: string;
-  _id: string;
-  id: string;
-}>;
-
-interface MementosProps {
-  data: data;
-  updateData(data: data, label: string): any;
-  viewer: boolean | string;
-  fullAccess: boolean;
-  isEditing: boolean;
-  isDeleting: boolean;
-  value: string | undefined;
-}
-
-const Mementos = ({
-  data,
-  updateData,
-  viewer,
-  fullAccess,
-  isEditing,
-  isDeleting,
-  value
-}: MementosProps) => {
-  if (!data.length) {
-    if (viewer) {
+class Mementos extends React.Component<MementosProps> {
+  render() {
+    const {
+      data,
+      updateData,
+      viewer,
+      fullAccess,
+      isEditing,
+      isDeleting,
+      value
+    } = this.props;
+    if (!data.length) {
       return (
-        <div className="column">
-          {" "}
-          <article className="message is-warning is-small">
-            <div className="message-body">
-              You do not have any mementos.
-              <a href={"/mementos/" + viewer}> click here </a>
-              to create one
-            </div>
-          </article>
-        </div>
+        <Message
+          viewer={viewer}
+          message={["You do not have any mementos.", "to create one"]}
+        />
       );
     } else {
       return (
         <div className="column">
-          {" "}
-          <article className="message is-warning is-small">
-            <div className="message-body">
-              You do not have any mementos.
-              <a href={"/homeglobe"}> click here </a>
-              to create one
-            </div>
-          </article>
+          <div id="info" className="columns is-gapless is-multiline is-mobile">
+            {data.map((mem, id) => {
+              return (
+                <Memento
+                  {...mem}
+                  title={mem.city + ", " + mem.country}
+                  onClick={() => {
+                    updateData(
+                      data.map(m => {
+                        return m._id === mem._id
+                          ? { ...m, active: !m.active }
+                          : m;
+                      }),
+                      "MEMENTOS"
+                    );
+                  }}
+                  isEditing={isEditing}
+                  isDeleting={isDeleting}
+                  slideNumber={id}
+                  fullAccess={fullAccess}
+                  value={value ? value.toLowerCase() : undefined}
+                />
+              );
+            })}
+          </div>
         </div>
       );
     }
-  } else {
-    return (
-      <div className="column">
-        <div id="info" className="columns is-gapless is-multiline is-mobile">
-          {data.map((mem, id) => {
-            return (
-              <Memento
-                owner={mem.owner}
-                photos={mem.photos}
-                title={mem.city + ", " + mem.country}
-                description={mem.description}
-                active={mem.active}
-                onClick={() => {
-                  updateData(
-                    data.map(m => {
-                      return m._id === mem._id
-                        ? { ...m, active: !m.active }
-                        : m;
-                    }),
-                    "MEMENTOS"
-                  );
-                }}
-                isEditing={isEditing}
-                isDeleting={isDeleting}
-                id={id}
-                fullAccess={fullAccess}
-                value={value ? value.toLowerCase() : undefined}
-                profilePicture={mem.profilePicture}
-                username={mem.username}
-                _id={mem.id}
-              />
-            );
-          })}
-        </div>
-      </div>
-    );
   }
-};
+}
 
 const mapStateToProps = state => {
   return {

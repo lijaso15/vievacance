@@ -1,15 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 // const validator = require('validator')
 
 const MementoSchema = new mongoose.Schema({
-    owner: String,
-    description: String,
-    photos: [String],
-    // isProfilePicture: Boolean
-    // likes
-    country: String,
-    city: String
-})
+  owner: String,
+  description: String,
+  photos: [String],
+  // isProfilePicture: Boolean
+  // likes
+  country: String,
+  city: String,
+  likes: [String]
+});
 
 // MementoSchema.statics.findByOwner = function (owner) {
 //     const Memento = this
@@ -24,5 +25,5 @@ const MementoSchema = new mongoose.Schema({
 //     })
 // }
 
-const Memento = mongoose.model('Memento', MementoSchema)
+const Memento = mongoose.model("Memento", MementoSchema);
 module.exports = { Memento };

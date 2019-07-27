@@ -50,7 +50,7 @@ if (!isDev && cluster.isMaster) {
       secret: "oursecret",
       resave: false,
       cookie: {
-        expires: 600000 * 3,
+        expires: 600000 * 3
         // secure: true
       },
       saveUninitialized: false
@@ -59,7 +59,7 @@ if (!isDev && cluster.isMaster) {
 
   // Answer API requests.
   app.get("/users", (req, res) => {
-    console.log(req.session);
+    // console.log(req.session);
     const id = req.session.user;
     if (id) {
       User.findById(id)
@@ -342,7 +342,14 @@ if (!isDev && cluster.isMaster) {
   app.post("/mementos/:owner_id", (req, res) => {
     const owner = req.params.owner_id;
     const { description, photos, city, country } = req.body;
-    const memento = new Memento({ description, photos, city, owner, country });
+    const memento = new Memento({
+      description,
+      photos,
+      city,
+      owner,
+      country,
+      likes: []
+    });
     memento.save();
 
     res.status(200).send();
@@ -368,6 +375,16 @@ if (!isDev && cluster.isMaster) {
       })
       .catch(err => res.status(500).send());
   });
+
+  app.post('mementos/like/:user_id/:mem_id', (req,res) => {
+    const mem_id = req.params.mem_id;
+    const user_id = req.params.user_id;
+    Memento.findById(mem_id).then(mem => {
+      mem.likes.push(user_id)
+      mem.save()
+      res.status(200).send()
+    }).catch(err => res.status(500).send(err))
+  })
 
   app.get("/mementos/user/:owner_id", (req, res, next) => {
     const owner = req.params.owner_id;
