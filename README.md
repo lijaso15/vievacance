@@ -1,19 +1,10 @@
 # vieVacance
+full stack trip planner
 
-French for vacation life, vieVacance is a full stack webapp built with:
+## Overview
+Share your vacation memories with other travellers. Explore popular city destinations. Discover recommendations for your next trip.
 
-JavaScript, TypeScript, HTML, css, python beautiful soup
-
-Front-end
-react, react-redux, axios, bulma, formik, react-router, amcharts
-
-Back-end
-express,mongodb
-
-Deployed with
-git, heroku 
-
-# Overview of Features
+# Features
 
 ## Slideshow
 
@@ -48,8 +39,17 @@ The data for the cities was scraped from wikipedia and cooresponding stock photo
 Given large enough userbase, can produce nlp generated suggestions from frequency statistics.
 
 # Upcoming features
-
 complete testing, likes, comments, views, and sharing.
 
+### Built from scratch with: 
 
+JavaScript, TypeScript, HTML, css, python beautiful soup
 
+Front-end
+react, react-redux, axios, bulma, formik, react-router, amcharts
+
+Back-end
+express,mongodb
+
+Deployed with
+git, heroku 
